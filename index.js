@@ -5,28 +5,29 @@ import { render } from 'react-dom'
 import {createStore} from 'redux';
 import {Provider} from 'react-redux'
 
-import io from 'socket.io-client'
 import App from './components/app'
-
-
-const socket = io(`${location.protocol}//${location.hostname}:8090`);
-
 
 const store = createStore((state = {}, action) => {
   switch (action.type) {
 
     case 'SET_STATE':
-      return state.merge(action.state);
+      return action.state;
 
     default:
       return state
   }
 });
 
+var socket = new WebSocket("ws://localhost:8090");
 
-socket.on('state', state =>
-  store.dispatch({type: 'SET_STATE', state})
-);
+socket.onopen = () => console.log("opened");
+socket.onclose = () => console.log("closed");
+
+socket.onmessage = (e) => {
+  var state = JSON.parse(e.data);
+
+  store.dispatch({ type: "SET_STATE", state});
+}
 
 render(
   <Provider store={store}>
