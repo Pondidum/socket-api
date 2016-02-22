@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Fleck;
+using Newtonsoft.Json;
 
 namespace SocketServer
 {
@@ -20,11 +21,20 @@ namespace SocketServer
 				socket.OnClose = () => sockets.Remove(socket);
 			});
 
+			int count = 0;
+
 			while (true)
 			{
 				Console.WriteLine("Press a key to send a message");
 				Console.ReadKey();
-				sockets.ForEach(s => s.Send("{ \"name\": \"Dave\" }"));
+
+				var message = new
+				{
+					count = count++,
+					lastUpdated = DateTime.Now
+				};
+
+				sockets.ForEach(s => s.Send(JsonConvert.SerializeObject(message)));
 			}
 		}
 	}
