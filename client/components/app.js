@@ -18,7 +18,7 @@ const mapStateToProps = (state) => {
 const component = ({ state }) => (
   <div>
     <h1>Hello</h1>
-    <p>{state.name}</p>
+    <p>{state.counter.count}</p>
   </div>
 )
 

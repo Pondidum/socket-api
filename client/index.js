@@ -6,17 +6,9 @@ import {createStore} from 'redux';
 import {Provider} from 'react-redux'
 
 import App from './components/app'
+import rootReducer from './reducers'
 
-const store = createStore((state = {}, action) => {
-  switch (action.type) {
-
-    case 'SET_STATE':
-      return action.state;
-
-    default:
-      return state
-  }
-});
+const store = createStore(rootReducer);
 
 var socket = new WebSocket("ws://localhost:8090");
 
