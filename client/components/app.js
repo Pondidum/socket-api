@@ -7,14 +7,6 @@ const mapStateToProps = (state) => {
   }
 }
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     onTodoClick: (id) => {
-//       dispatch(toggleTodo(id))
-//     }
-//   }
-// }
-
 const component = ({ state }) => (
   <div>
     <h1>Hello</h1>
