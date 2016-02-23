@@ -9,18 +9,23 @@ import App from './components/app'
 import rootReducer from './reducers'
 
 
-const remoteMiddleware = store => next => action => {
-  console.log("remoteMiddleware", action);
+const remoteMiddleware = socket => store => next => action => {
+
+  if (action.meta && action.meta.remote)
+    socket.emit('action', action);
+
   next(action);
 }
 
-const createStoreWithMiddelware = applyMiddleware(remoteMiddleware)(createStore);
-const store = createStoreWithMiddelware(rootReducer);
+
 
 var socket = new WebSocket("ws://localhost:8090");
-
 socket.onopen = () => console.log("opened");
 socket.onclose = () => console.log("closed");
+
+const createStoreWithMiddelware = applyMiddleware(remoteMiddleware(socket))(createStore);
+const store = createStoreWithMiddelware(rootReducer);
+
 
 socket.onmessage = (e) => {
   var state = JSON.parse(e.data);

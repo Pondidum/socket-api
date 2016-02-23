@@ -19,6 +19,7 @@ namespace SocketServer
 			{
 				socket.OnOpen = () => sockets.Add(socket);
 				socket.OnClose = () => sockets.Remove(socket);
+				socket.OnMessage = message => Console.WriteLine(message);
 			});
 
 			int count = 0;
