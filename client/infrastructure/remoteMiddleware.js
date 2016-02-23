@@ -1,7 +1,7 @@
 const remoteMiddleware = socket => store => next => action => {
 
   if (action.meta && action.meta.remote)
-    socket.emit('action', action);
+    socket.send(JSON.stringify(action));
 
   next(action);
 }
