@@ -15,20 +15,9 @@ namespace SocketServer
 			var server = new WebSocketServer("ws://0.0.0.0:8090");
 			var sockets = new List<IWebSocketConnection>();
 
-			server.Start(socket =>
-			{
-				socket.OnOpen = () => sockets.Add(socket);
-				socket.OnClose = () => sockets.Remove(socket);
-				socket.OnMessage = message => Console.WriteLine(message);
-			});
-
 			int count = 0;
-
-			while (true)
+			var broadcast = new Action(() =>
 			{
-				Console.WriteLine("Press a key to send a message");
-				Console.ReadKey();
-
 				var message = new
 				{
 					count = count++,
@@ -36,7 +25,36 @@ namespace SocketServer
 				};
 
 				sockets.ForEach(s => s.Send(JsonConvert.SerializeObject(message)));
+			});
+
+
+			server.Start(socket =>
+			{
+				socket.OnOpen = () => sockets.Add(socket);
+				socket.OnClose = () => sockets.Remove(socket);
+				socket.OnMessage = json =>
+				{
+					var message = JsonConvert.DeserializeObject<Message>(json);
+
+					if (message.Type.Equals("increment", StringComparison.OrdinalIgnoreCase))
+						broadcast();
+
+				};
+			});
+
+			
+			while (true)
+			{
+				Console.WriteLine("Press a key to send a message");
+				Console.ReadKey();
+
+				broadcast();
 			}
 		}
+	}
+
+	public class Message
+	{
+		public string Type { get; set; }
 	}
 }
