@@ -7,15 +7,7 @@ import {Provider} from 'react-redux'
 
 import App from './components/app'
 import rootReducer from './reducers'
-
-
-const remoteMiddleware = socket => store => next => action => {
-
-  if (action.meta && action.meta.remote)
-    socket.emit('action', action);
-
-  next(action);
-}
+import remoteMiddleware from './infrastructure/remoteMiddleware'
 
 
 
