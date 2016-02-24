@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { increment } from '../actions'
 
 const mapStateToProps = (state) => {
   return {
@@ -9,10 +10,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    increment: () => dispatch({
-      meta: { remote: true },
-      type: "INCREMENT"
-    })
+    increment: () => dispatch(increment())
   }
 }
 
