@@ -6,6 +6,8 @@ import {createStore, applyMiddleware } from 'redux';
 import {Provider} from 'react-redux'
 
 import App from './components/app'
+
+import { setState } from './actions'
 import rootReducer from './reducers'
 import remoteMiddleware from './infrastructure/remoteMiddleware'
 
@@ -21,8 +23,7 @@ const store = createStoreWithMiddelware(rootReducer);
 
 socket.onmessage = (e) => {
   var state = JSON.parse(e.data);
-
-  store.dispatch({ type: "SET_STATE", state});
+  store.dispatch(setState(state));
 }
 
 
