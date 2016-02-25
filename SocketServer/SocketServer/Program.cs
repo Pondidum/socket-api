@@ -15,18 +15,31 @@ namespace SocketServer
 			var server = new WebSocketServer("ws://0.0.0.0:8090");
 			var sockets = new List<IWebSocketConnection>();
 
+			var handlers = new Dictionary<string, Action<Message>>(StringComparer.OrdinalIgnoreCase);
+
 			int count = 0;
-			var broadcast = new Action(() =>
+
+			handlers["increment"] = message =>
 			{
-				var message = new
+				 var reply = JsonConvert.SerializeObject(new
+				 {
+					 count = ++count,
+					 lastUpdated = DateTime.Now
+				 });
+
+				 sockets.ForEach(s => s.Send(reply));
+			 };
+
+			handlers["decrement"] = message =>
+			{
+				var reply = JsonConvert.SerializeObject(new
 				{
-					count = count++,
+					count = --count,
 					lastUpdated = DateTime.Now
-				};
+				});
 
-				sockets.ForEach(s => s.Send(JsonConvert.SerializeObject(message)));
-			});
-
+				sockets.ForEach(s => s.Send(reply));
+			};
 
 			server.Start(socket =>
 			{
@@ -36,20 +49,17 @@ namespace SocketServer
 				{
 					var message = JsonConvert.DeserializeObject<Message>(json);
 
-					if (message.Type.Equals("increment", StringComparison.OrdinalIgnoreCase))
-						broadcast();
+					Action<Message> handler;
+
+					if (handlers.TryGetValue(message.Type, out handler))
+						handler(message);
 
 				};
 			});
 
-			
-			while (true)
-			{
-				Console.WriteLine("Press a key to send a message");
-				Console.ReadKey();
 
-				broadcast();
-			}
+			Console.WriteLine("Listening on {0}", server.Location);
+			Console.ReadKey();
 		}
 	}
 
