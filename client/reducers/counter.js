@@ -1,4 +1,4 @@
-const counter = (state = {}, action) => {
+const counter = (state = { count: 0 }, action) => {
 
   switch (action.type) {
 
