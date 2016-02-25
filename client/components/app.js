@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { increment } from '../actions'
+import { increment, decrement } from '../actions'
 
 const mapStateToProps = (state) => {
   return {
@@ -10,21 +10,30 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    increment: () => dispatch(increment())
+    increment: () => dispatch(increment()),
+    decrement: () => dispatch(decrement())
   }
 }
 
-const component = ({ state, increment }) => (
+const component = ({ state, increment, decrement }) => (
   <div>
     <h1>Hello</h1>
-    <p>{state.counter.count}</p>
-      <p><a href="#" onClick={e => {
+    <p>
+      <a href="#" onClick={e => {
+        e.preventDefault();
+        decrement();
+      }}>
+      Decrement
+      </a>
+      { " " }
+      <a href="#" onClick={e => {
         e.preventDefault();
         increment();
       }}>
-      Increment please.
+      Increment
       </a>
     </p>
+    <p>{state.counter.count}</p>
   </div>
 )
 

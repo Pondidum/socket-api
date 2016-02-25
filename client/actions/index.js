@@ -5,6 +5,13 @@ export const increment = () => {
   }
 }
 
+export const decrement = () => {
+  return {
+    meta: { remote: true },
+    type: "DECREMENT"
+  }
+}
+
 export const setState = (state) => {
   return {
     type: "SET_STATE",
