@@ -41,9 +41,25 @@ namespace SocketServer
 				sockets.ForEach(s => s.Send(reply));
 			};
 
+			handlers["current"] = message =>
+			{
+				var reply = JsonConvert.SerializeObject(new
+				{
+					count = count,
+					lastUpdated = DateTime.Now
+				});
+
+				sockets.ForEach(s => s.Send(reply));
+			};
+
 			server.Start(socket =>
 			{
-				socket.OnOpen = () => sockets.Add(socket);
+				socket.OnOpen = () =>
+				{
+					sockets.Add(socket);
+					handlers["current"](null);
+				};
+
 				socket.OnClose = () => sockets.Remove(socket);
 				socket.OnMessage = json =>
 				{
