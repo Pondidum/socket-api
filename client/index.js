@@ -13,7 +13,7 @@ import remoteMiddleware from './infrastructure/remoteMiddleware'
 
 
 
-var socket = new WebSocket("ws://localhost:8090");
+var socket = new WebSocket(`ws://${location.hostname}:8090`);
 socket.onopen = () => console.log("opened");
 socket.onclose = () => console.log("closed");
 
