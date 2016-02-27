@@ -2,16 +2,23 @@ var webpack = require('webpack')
 var webpackDevMiddleware = require('webpack-dev-middleware')
 var webpackHotMiddleware = require('webpack-hot-middleware')
 var config = require('./webpack.config')
+var express = require('express');
 
-var app = new (require('express'))()
-var port = 3000
+var app = new express();
+var port = 3000;
 
 var compiler = webpack(config)
-app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
+
+app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: '/static/' }))
 app.use(webpackHotMiddleware(compiler))
 
+var root = __dirname + '/client/';
+app.use("/css", express.static(root + 'css'));
+app.use("/js", express.static(root + 'js'));
+app.use("/fonts", express.static(root + 'fonts'));
+
 app.get("/", function(req, res) {
-  res.sendFile(__dirname + '/index.html')
+  res.sendFile(root + 'index.html')
 })
 
 app.listen(port, function(error) {

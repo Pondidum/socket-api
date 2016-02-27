@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "build": "webpack",
-    "test": "cross-env NODE_ENV=test mocha --recursive --compilers js:babel-register --require ./test/setup.js",
+    "test": "cross-env NODE_ENV=test mocha --recursive --compilers js:babel-register --require ./client/test/setup.js",
     "test:watch": "npm test -- --watch"
   },
   "author": "",
